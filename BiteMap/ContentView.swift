@@ -4,20 +4,40 @@
 //
 //  Created by Kevin Pradjinata on 3/16/24.
 //
-
 import SwiftUI
+import FirebaseAuth // Import FirebaseAuth
+
 
 struct ContentView: View {
+    @StateObject var authViewModel = AuthViewModel()
+    @StateObject var locationManager = LocationManager()
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if authViewModel.isUserLoggedIn {
+            TabView {
+                MainContentView(locationManager: locationManager) // Pass locationManager here
+                    .tabItem {
+                        Label("Location", systemImage: "location.circle")
+                    }
+
+                ProfileView()
+                    .tabItem {
+                        Label("Profile", systemImage: "person.crop.circle")
+                    }
+            }
+        } else {
+            LoginView(authViewModel: authViewModel)
         }
-        .padding()
     }
 }
+
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
+
 
 #Preview {
     ContentView()
